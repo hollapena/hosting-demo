@@ -3,7 +3,7 @@ const path = require('path')
 
 const app = express()
 
-app.get("http://localhost:4000/api/compliment", (req, res) => {
+app.get("http://f10-hosting-demo.herokuapp.com/api/compliment", (req, res) => {
     const compliments = ["Gee, you're a smart cookie!",
 					 "Cool shirt!",
 					 "Your Javascript skills are stellar.",

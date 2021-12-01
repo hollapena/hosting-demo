@@ -52,7 +52,7 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
       document.getElementById("complimentButton").onclick = function () {
-        axios.get("http://localhost:4000/api/compliment/")
+        axios.get("http://f10-hosting-demo.herokuapp.com/api/compliment/")
             .then(function (response) {
               const data = response.data;
               alert(data);

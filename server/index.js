@@ -3,6 +3,12 @@ const path = require('path')
 
 const app = express()
 
+app.get("http://localhost:4000/api/compliment", (req, res) => {
+    const compliments = ["Gee, you're a smart cookie!",
+                       "Cool shirt!",
+                       "Your Javascript skills are stellar.",
+    ];
+
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, "../index.html"))
 

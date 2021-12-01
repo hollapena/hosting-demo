@@ -1,12 +1,176 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Heroku Test</title>
-</head>
-<body>
-  <h1>This is my heroku deployment!!!</h1>
-</body>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css">
+    <title>Back End Assessment</title>
+  </head>
+  <body class="container">
+
+    <section id="header">
+      <h1 id="heading">A Day In The Life</h1>
+      <h2 id="subheading">Student's Guide For Growth and Success</h2>
+    </section>
+    
+    <section id="morning">
+       <h2 id="thanks">Give Thanks</h2>
+       <h3 id="grat">Start the Day with Gratitude</h3>
+      <br>
+      <input type="text" id="gratitudeText" placeholder="Enter what you are grateful for today."/>
+      <button id="gratitudeButton">Remember this Gratutide</button>
+    </section>
+<br>
+<br>
+
+    <section id="midday">
+      <h2 class="todolist" id="todotitle">Today's To Do List</h2>
+      <h3 class="todolist" id="todosub">Use this to keep your tasks organized <hr> To update a task's description, <br> type a new description in the box and press update.</h3>
+      <input id="todotext" class="todolist" type="text" placeholder="Enter a Task"/>
+      <textarea id="descriptionText" class="todolist" placeholder="Description or notes about the task"></textarea>
+      <button id="todobutton" class="todolist" type="submit">Submit Task</button>
+      <ul class="todolist" id="displayedList">
+
+      </ul>
+    </section>
+
+    <section id="needAPush">
+      <button id="gratitudeReminder">Gratitude Reminder</button>
+      <button id="complimentButton">Receive a Compliment</button>
+      <button id="fortuneButton">Have your Fortune Told</button>
+      <button id="cureForStress">Click Here to Cure Your Stress</button>
+      <button id="cureForBoredom">Click Here to Cure Your Boredom</button>
+    </section>
+
+    <section id="evening">
+      <!-- Dinner Ideas
+        Pat yourself on the back 
+      Time to unwind -->
+    </section>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+      document.getElementById("complimentButton").onclick = function () {
+        axios.get("http://localhost:4000/api/compliment/")
+            .then(function (response) {
+              const data = response.data;
+              alert(data);
+            });
+      };
+      document.getElementById("fortuneButton").onclick = function  () {
+        axios.get("http://localhost:4000/api/fortune/")
+          .then(function (response) {
+            const fortune = response.data;
+            alert(fortune);
+          });
+      };
+      document.getElementById("cureForStress").onclick = function () {
+        axios.get("http://www.boredapi.com/api/activity?type=relaxation")
+        .then (function(response) {
+          const{activity, accessibility, type, participants, price} = response.data;
+          const relaxation = {
+            activity, 
+            accessibility, 
+            type, 
+            participants, 
+            price
+          }
+          alert(`${relaxation.activity}, it takes ${relaxation.participants} participant(s), and costs about $${relaxation.price * 10}`);
+        });
+      };
+
+      document.getElementById("cureForBoredom").onclick = function () {
+        axios.get("http://www.boredapi.com/api/activity")
+        .then (function(response) {
+          const{activity, accessibility, type, participants, price} = response.data;
+          const task = {
+            activity, 
+            accessibility, 
+            type, 
+            participants, 
+            price
+          }
+          alert(`${task.activity}, it takes ${task.participants} participant(s), and costs about $${task.price * 10}`);
+        });
+      };
+
+      const gratitude = [];
+
+      document.getElementById("gratitudeButton").onclick = function () {
+        let gratitudeText=document.getElementById("gratitudeText").value;
+        let newEntry = {
+          gratitudeText
+        };
+        document.getElementById('gratitudeText').value=''
+        console.log(newEntry);
+        axios.post("http://localhost:4000/api/gratitude/", newEntry)
+        .then (function (response) {
+          alert(response.data);
+        });
+      };
+
+      document.getElementById("todobutton").onclick = function () {
+        let toDoText=document.getElementById("todotext").value;
+        let descriptionText=document.getElementById("descriptionText").value;
+        let newItem = {
+          toDoText,
+          descriptionText
+        };
+        document.getElementById('todotext').value=''
+        document.getElementById('descriptionText').value=''
+        console.log(newItem);
+        axios.post("http://localhost:4000/api/todo/", newItem)
+        .then (function (response) {
+          createToDoItem(response.data);
+        });
+      };
+
+      function createToDoItem(res){
+        document.getElementById('displayedList').innerHTML= '';
+        // newTask.innerHTML=''
+        let toDoList = res
+        for(let i = 0; i<toDoList.length; i++){
+          const id=toDoList[i][0]
+          const item=toDoList[i][1]
+          const description=toDoList[i][2]
+          let newTask=document.createElement('div')
+          newTask.classList.add('task-style')
+          newTask.innerHTML=`<button onclick="deleteItem(${id})" class="deleteButton">X</button>
+          <button onclick="updateItem(${id})" class="updateButton">Update</button>
+          <h2 class="task">${item}</h2><p class="notes">${description}</p>`;
+          document.getElementById('displayedList').append(newTask);
+        }
+      };
+      function deleteItem (id) {
+        axios.delete(`http://localhost:4000/api/todo/${id}`)
+        .then(res => {
+          alert("Congratulations on Finishing your Task!")
+          createToDoItem(res.data);
+        })
+      };
+
+      function updateItem(id) {
+        let data = document.getElementById("descriptionText").value
+        let update = {
+          data
+        };
+        axios.put(`http://localhost:4000/api/todo/${id}`, update)
+        .then(res => {
+          alert('Item Updated')
+          createToDoItem(res.data);
+        })
+      };
+
+      document.getElementById("gratitudeReminder").onclick = function  () {
+        axios.get("http://localhost:4000/api/gratitude/")
+          .then(function (response) {
+            const gratitudeReturn = response.data;
+            alert(`You are grateful for ${gratitudeReturn}`);
+          });
+        };
+      
+    </script>
+    
+  </body>
 </html>

@@ -1,7 +1,12 @@
 const express = require('express')
 const path = require('path')
+const cors = require("cors");
 
 const app = express()
+
+app.use(cors());
+
+app.use(express.json());
 
 app.get("http://f10-hosting-demo.herokuapp.com/api/compliment", (req, res) => {
     const compliments = ["Gee, you're a smart cookie!",

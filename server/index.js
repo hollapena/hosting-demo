@@ -8,7 +8,7 @@ app.use(cors());
 
 app.use(express.json());
 
-app.get("https://f10-hosting-demo.herokuapp.com/api/compliment", (req, res) => {
+app.get("/api/compliment", (req, res) => {
     const compliments = ["Gee, you're a smart cookie!",
 					 "Cool shirt!",
 					 "Your Javascript skills are stellar.",

@@ -48,9 +48,7 @@
         Pat yourself on the back 
       Time to unwind -->
     </section>
-
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script>
+   <script>
       document.getElementById("complimentButton").onclick = function () {
         axios.get("./server/index.js/api/compliment")
             .then(function (response) {
@@ -58,7 +56,8 @@
               alert(data);
             });
       };
-      </script>
+    </script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     
   </body>
 </html>
